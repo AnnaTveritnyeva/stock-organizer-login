@@ -5,9 +5,9 @@ import com.anna.tveritnyeva.stockorganizerlogin.beans.User;
 import com.anna.tveritnyeva.stockorganizerlogin.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsManagerImpl implements UserDetailsManager {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getEmail())
                     //change here to store encoded password in db
-                    .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                    .password(passwordEncoder.encode(user.getPassword()))
                     .disabled(user.isDisabled())
                     .accountExpired(user.isAccountExpired())
                     .accountLocked(user.isAccountLocked())
@@ -44,5 +44,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("Wrong user name");
         }
+    }
+
+    @Override
+    public void createUser(UserDetails user) {
+        //TODO: override
+    }
+
+    @Override
+    public void updateUser(UserDetails user) {
+        //TODO: override
+    }
+
+    @Override
+    public void deleteUser(String username) {
+        //TODO: override
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword) {
+        //TODO: override (remember to encode)
+    }
+
+    @Override
+    public boolean userExists(String username) {
+        //TODO: override
+        return false;
     }
 }
